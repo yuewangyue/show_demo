@@ -1,0 +1,229 @@
+
+<!DOCTYPE>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="../../static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/css/bootstrap-table.min.css">
+    <link rel="stylesheet" href="../../static/css/jquery-ui-1.9.2.custom.css" type="text/css">
+
+    <script type="text/javascript" src="../../static/js/jquery-1.12.4.min.js"></script>
+    <script src="../../static/js/Popper.min.js"></script>
+    <script src="../../static/js/bootstrap.min.js"></script>
+    <script src="../../static/js/bootstrap-table.min.js"></script>
+    <script src="../../static/js/bootstrap-table-zh-CN.min.js"></script>
+    <script type="text/javascript" src="../../static/js/jquery-ui-1.9.2.custom.js"></script>
+
+    <script type="text/javascript" src="../../static/js/share.js"></script>
+    <script type="text/javascript" src="../../static/js/files/user.js"></script>
+    <title>中业</title>
+
+</head>
+<body id="body" class="modal-open">
+
+<div style="margin:0 auto;">
+    <h2 style="text-align: center;">用户</h2>
+
+    <div id="" style="text-align: center;">
+
+        <div id="" class="text " style="float: left;margin: auto 0px;">
+            <p style="margin: 0 10px auto 20px;float: left;"><span>角色:</span></p>
+            <select id="user_role" class="user_role" style="width:125px;height:24px;margin: 0px 40px auto 5px;">
+              <option style="color: #aaaaaa;">无</option>
+              <option>管理员</option>
+              <option>普通用户</option>
+            </select>
+        </div>
+
+        <div class="" style="width: 376px;margin: auto auto;float: right;">
+            <button class="chaxun" type="button" style="width: 70px;float:left;height: 25px;font-size: 16px;" onclick="user_chaxun()">查询</button>
+            <button class="daochu" type="button" style="width: 70px;float: left;height: 25px;font-size: 16px;">导出</button>
+            <div id="toolbar">
+                <button type="button" data-toggle="modal" data-target="#addModal" style="width: 70px;float:left;height: 25px;font-size: 16px;" >新增</button>
+                <button data-toggle="modal" data-target="#addModal" type="button" style="width: 70px;float: left;height: 25px;font-size: 16px;" onclick="user_change()">变更</button>
+            </div>
+            <button class="daochu" type="button" style="width: 70px;float: left;height: 25px;font-size: 16px;;margin-right: 25px;" onclick="user_del()">删除</button>
+
+        </div></br>
+
+    </div>
+
+    <div style="padding: 10px 25px;margin-top:25px;display: block; " id="div_tall" class="table-responsive">
+        <table data-toggle="table" id="table_all" class="table table-striped">
+            <thead>
+                <tr>
+                    <th data-field="user_name" data-align="center"><b>用户名</b></th>
+                    <th data-field="qq_num" data-align="center">QQ号</th>
+                    <th data-field="mail_num" data-align="center">邮箱</th>
+
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div style="padding: 10px 25px;margin-top:25px;display: none; " id="div_tresult" class="table-responsive">
+        <table id="table_result" class="table table-striped" data-pagination="true" data-show-refresh="true" data-show-toggle="true" data-showColumns="true">
+        <thead>
+            <tr>
+                <th data-field="xuhao" data-align="center">序号</th>
+                <th data-field="user_name" data-align="center"><b>用户名</b></th>
+                <th data-field="qq_num" data-align="center">QQ号</th>
+                <th data-field="mail_num" data-align="center">邮箱</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    </div>
+
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-hidden="true">
+       <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">添加记录</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form role="form" action="javascript:void(0)">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="user-name" placeholder="请输入用户名">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="qq-num" placeholder="请输入QQ号">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="mail-num" placeholder="请输入邮箱">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="addRecord" onclick="add_done()">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+<script>
+
+$('#table_all').bootstrapTable({
+    url: '/user_all',
+    method:'get',
+    dataType:"json",
+    contentType:'application/x-www-form-urlencoded',
+
+    striped: true,                      //是否显示行间隔色
+    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+    pagination: true,                   //是否显示分页（*）
+    pageSize: 5,
+    pageNumber: 1,
+    sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+    pageList: [5, 10, 15, 20],        //可供选择的每页的行数（*）
+    queryParamsType: '',               // 传给服务器pageSize ,pageNumber
+    search: false,                      //是否显示表格搜索
+    strictSearch: false,
+    showColumns: false,                  //是否显示所有的列（选择显示的列）
+    showRefresh: false,                  //是否显示刷新按钮
+    clickToSelect: true,                //是否启用点击选中行
+    //height: 500,                      //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+    uniqueId: "no",                     //每一行的唯一标识，一般为主键列
+    showToggle: false,                   //是否显示详细视图和列表视图的切换按钮
+    cardView: false,                    //是否显示详细视图
+    async:true,
+
+
+    columns: [
+        {field: 'xuhao', title: '序号',
+        checkbox:true,
+        formatter:stateFormatter
+        },
+        { field: 'user_name', title: '用户名',
+        formatter: function(value, row, index) {
+            return row.user_name;
+        },},
+        { field: 'qq_num', title: 'QQ号',
+        formatter: function(value, row, index) {
+            return row.qq_num;
+        },},
+        { field: 'mail_num', title: '邮箱',
+        formatter: function(value, row, index) {
+            return row.mail_num;
+        },}
+        ],
+    onClickRow: function(row, $element) {
+                    //$element是当前tr的jquery对象
+                    $element.css("background-color", "green");
+                },//单击row事件
+    locale: "zh-CN", //中文支持
+    detailView: false, //是否显示详情折叠
+    detailFormatter: function(index, row, element) {
+        var html = '';
+        $.each(row, function(key, val){
+            html += "<p>" + key + ":" + val +  "</p>"
+        });
+        return html;
+    },
+    onLoadSuccess: function() { //加载成功时执行
+        $("#theTable th").css("text-align", "center"); //设置表头内容居中
+    },
+    onLoadError: function() { //加载失败时执行
+        alert("加载数据失败");
+    }
+});
+
+
+function infoFormatter(value, row, index) {
+    return "id:" + row.id + " name:" + row.name + " age:" + row.age;
+}
+
+
+function stateFormatter(value, row, index) {
+    if (row.state == true)
+        return {
+            disabled : true,//设置是否可用
+            checked : false//设置选中
+        };
+    return value;
+}
+function init_table(){
+    var get_url = "/user_all";
+    $.get(get_url, {
+        },
+        function(data) {
+            console.log(data);
+
+            $('#fusion_failure_table').bootstrapTable('load', data);
+        });
+
+        // 设置文件名
+        a.download = "学生成绩表.xls";
+}
+
+$(document).ready(function() {
+    init_table();
+});
+function tableWidth(){
+        //可以根据自己页面情况进行调整
+        return $(window).width() - 50;
+    }
+//tableHeight函数
+function tableHeight(){
+    //可以根据自己页面情况进行调整
+    return $(window).height() - 280;
+}
+$(window).resize(function() {
+    $('#fusion_failure_table').bootstrapTable('resetView', {
+        width: tableWidth(),
+    });
+    })
+
+</script>
+
+</html>
+
+
+
+
+

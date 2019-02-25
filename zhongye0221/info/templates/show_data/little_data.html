@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="../../static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/css/bootstrap-table.min.css">
+    <link rel="stylesheet" href="../../static/css/jquery-ui-1.9.2.custom.css" type="text/css">
+
+    <script type="text/javascript" src="../../static/js/jquery-1.12.4.min.js"></script>
+    <script src="../../static/js/Popper.min.js"></script>
+    <script src="../../static/js/bootstrap.min.js"></script>
+    <script src="../../static/js/bootstrap-table.min.js"></script>
+    <script src="../../static/js/bootstrap-table-zh-CN.min.js"></script>
+    <script type="text/javascript" src="../../static/js/jquery-ui-1.9.2.custom.js"></script>
+    <script type="text/javascript" src="../../static/js/share.js"></script>
+    <script type="text/javascript" src="../../static/js/files/xiaoziliao.js"></script>
+
+    <title>小资料</title>
+</head>
+<body>
+
+<div style="height: 100%;width: 100%;">
+    <h2 style="text-align: center;margin: 10px auto;height: 5%;">小资料</h2>
+    <!-- 第一行 -->
+    <div style="width: 100%;height:20%;float: left;">
+        <div id="ziliao_id" class="ziliao_id" style="width: 16%;height:100%;float: left;margin: 0 0px;" >
+            <div style=" width: 50%;height: 100%; float: left;">
+                <p style="float: right;">资料ID：</p>
+            </div>
+            <input type="text" name="ziliaoID" class="xiao_ziliaoID"  style="float: left;width: 50%;height: 100%;margin-top: 0;" placeholder="请输入" >
+        </div>
+
+        <div id="" class="" style="width: 16%;height:100%;float: left;">
+            <div style=" width: 50%;height: 100%; float: left;">
+                <p style="float: right;">采集任务ID：</p>
+            </div>
+            <input type="text" name="caijirenwuID" class="xiao_col_task_id" style="width: 50%;height: 100%;" placeholder="请输入" >
+        </div>
+
+        <div id="" class="text" style="width: 16%;height:100%;float: left;">
+            <div style=" width: 50%;height: 100%; float: left;">
+                <p style="float: right;">情报ID：</p>
+            </div>
+            <input type="text" name="qingbaoID" class="xiao_qingbao_id" style="width: 50%;height: 100%;margin-top: 0;" placeholder="请输入" >
+        </div>
+
+        <div id="" class="text " style="width: 16%;height:100%;float: left;margin: 0 0px;">
+            <div style=" width: 50%;height: 100%; float: left;">
+                <p style="float: right;">资料源：</p>
+            </div>
+            <select id="select" class="xiao_data_source" style="width:50%;height: 100%;margin-top: 0;">
+                <option style="color: #aaaaaa;">无</option>
+                <option>自采高精</option>
+                <option>设备众包</option>
+                <option>众包APP</option>
+            </select>
+        </div>
+
+        <div id="time" class="text " style="width: 20%;height:100%;float: left;">
+            <div style=" width: 40%;height: 100%; float: left;">
+                <p style="float: right;"><span>完成时间：</span></p>
+            </div>
+            <button type="button" id="ui-datepicker-time" class="time_flag" value="0" style="width:40%;height: 100%;display: block" onclick="choose_date()">选择日期</button>
+
+            <!-- 时间框 -->
+            <input type="text" id="ui-datepicker-time" class="ui-datepicker-time" style="display: none;width: 55%; height: 28px;font-size: 12px;" readonly value="" />
+
+            <div class="ui-datepicker-css">
+              <div class="ui-datepicker-quick">
+                  <p>快捷日期<a class="ui-close-date">X</a></p>
+              </div>
+              <div class="ui-datepicker-choose">
+                  <p>自选日期</p>
+                  <div class="ui-datepicker-date">
+                      <input name="startDate" id="startDate" class="startDate" readonly value="2014/12/20" type="text">
+                    -
+                      <input name="endDate" id="endDate" class="endDate" readonly  value="2014/12/20" type="text" disabled onChange="datePickers()">
+
+                  </div>
+              </div>
+          </div>
+        </div>
+
+    </div>
+    <!-- 第二行 -->
+    <div style="height: 20%;width: 100%;margin-top: 7px;float: left;">
+        <div id="" class="text "  style="width:16%;height: 100%;float: left;">
+            <div style=" width: 50%;height: 100%; float: left;">
+                <p style="float: right;"><span>省份：</span></p>
+            </div>
+              <select id="xiao_province" class="xiao_province" style="width:50%;height: 100%;" onclick="xiao_province()">
+              <option style="color: #aaaaaa;">无</option>
+              {% for pro in data %}
+                  <option>{{ pro.namecn }}</option>
+              {% endfor %}
+            </select>
+        </div>
+
+        <div id="" class="text7" style="width: 16%;height: 100%;float: left;">
+          <div style=" width: 50%;height: 100%; float: left;">
+              <p style="float: right;"><span>城市：</span></p>
+          </div>
+          <select id="xiao_city" class="xiao_city" style="width: 50%;height: 100%;">
+              <option id="city_xiao" style="color: #aaaaaa;">无</option>
+          </select>
+        </div>
+
+        <div id="" class="text " style="width: 16%;height: 100%;float: left;">
+            <div style=" width: 50%;height: 100%; float: left;">
+                <p style="float: right;"><span>状态：</span></p>
+            </div>
+            <select id="select" class="xiao_deal_status" style="width:50%;height: 100%;">
+              <option style="color: #aaaaaa;">无</option>
+              <option>成功</option>
+              <option>失败</option>
+            </select>
+        </div>
+
+        <div id="" class="text " style="width: 16%;height: 100%;float: left;">
+            <div style=" width: 50%;height: 100%; float: left;">
+                <p style="float: right;"><span>处理环节：</span></p>
+            </div>
+            <select id="select" class="xiao_deal_huanjie" style="width:50%;height: 100%;margin-top: 0px;">
+              <option style="color: #aaaaaa;">无</option>
+              <option>send2img</option>
+              <option>mtl2db</option>
+              <option>image2db</option>
+            </select>
+        </div>
+
+        <div id="" class="text" style="width: 16%;height:100%;float: left;">
+          <div style=" width: 50%;height: 100%; float: left;">
+              <p style="float: right;">采集类型：</p>
+          </div>
+          <select id="select"  class="xiao_col_type" style="width: 50%;height: 100%;">
+              <option style="color: #aaaaaa;">无</option>
+              <option>新增</option>
+              <option>批量更新</option>
+              <option>精细化</option>
+          </select>
+        </div>
+
+        <!-- 查询 导出 -->
+        <div style="float: right;margin: 0px auto; width: 9%;height: 100%">
+            <button style="text-decoration: none; margin-top: 1px;height: 100%; width: 50%; color: black; text-align: center;font-size:14px; background: whitesmoke; float:left; border: 1px solid slategrey;" type="button" onclick="xiao_chaxun()">查询</button>
+            <form action="/download/小资料.xls" method="get">
+                <button class="daochu" type="submit" value="导出" style="float: left;height: 100%;width: 50%;font-size: 14px;" onclick="xiao_daochu()">导出</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 第三行 -->
+    <div style="width: 100%;padding: 8px 10px;display: block;" id="div_tall">
+        <table id="table_all" class="table table-striped"data-pagination="true" data-show-refresh="true" data-show-toggle="true" data-showColumns="true">
+            <thead>
+                <tr>
+                    <th data-field="data_id" data-align="center"><b>资料ID</b></th>
+                    <th data-field="col_task_id" data-align="center">采集任务ID</th>
+                    <th data-field="qb_id" data-align="center">情报ID</th>
+                    <th data-field="data_name" data-align="center">资料名称</th>
+                    <th data-field="data_source" data-align="center">资料源</th>
+                    <th data-field="col_type" data-align="center">采集类型</th>
+                    <th data-field="work_use" data-align="center">作业用途</th>
+                    <th data-field="province" data-align="center">省份</th>
+                    <th data-field="city" data-align="center">城市</th>
+                    <th data-field="sw_province" data-align="center">SW省份</th>
+                    <th data-field="col_time" data-align="center">采集时间</th>
+                    <th data-field="deal_hj" data-align="center">处理环节</th>
+                    <th data-field="status" data-align="center">状态</th>
+                    <th data-field="start_time" data-align="center">开始时间</th>
+                    <th data-field="end_time" data-align="center">结束时间</th>
+                    <th data-field="data_lc" data-align="center">资料里程</th>
+                    <th data-field="trail_point" data-align="center">轨迹点数</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div style="width: 100%;padding: 8px 10px;display: none; "id="div_tresult">
+        <table id="table_result" class="table table-striped" data-pagination="true" data-show-refresh="true" data-show-toggle="true" data-showColumns="true">
+        <thead>
+             <tr>
+                <th data-field="data_id" data-align="center"><b>资料ID</b></th>
+                <th data-field="col_task_id" data-align="center">采集任务ID</th>
+                <th data-field="qb_id" data-align="center">情报ID</th>
+                <th data-field="data_name" data-align="center">资料名称</th>
+                <th data-field="data_source" data-align="center">资料源</th>
+                <th data-field="col_type" data-align="center">采集类型</th>
+                <th data-field="work_use" data-align="center">作业用途</th>
+                <th data-field="province" data-align="center">省份</th>
+                <th data-field="city" data-align="center">城市</th>
+                <th data-field="sw_province" data-align="center">SW省份</th>
+                <th data-field="col_time" data-align="center">采集时间</th>
+                <th data-field="deal_hj" data-align="center">处理环节</th>
+                <th data-field="status" data-align="center">状态</th>
+                <th data-field="start_time" data-align="center">开始时间</th>
+                <th data-field="end_time" data-align="center">结束时间</th>
+                <th data-field="data_lc" data-align="center">资料里程</th>
+                <th data-field="trail_point" data-align="center">轨迹点数</th>
+                </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    </div>
+</div>
+</body>
+
+<script>
+
+$('#table_all').bootstrapTable({
+    url: '/little_data_all',
+    method:'get',
+    dataType:"json",
+    contentType:'application/x-www-form-urlencoded',
+
+    striped: true,                      //是否显示行间隔色
+    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+    pagination: true,                   //是否显示分页（*）
+    pageSize: 10,
+    pageNumber: 1,
+    sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+    pageList: [10, 15, 20, 50],        //可供选择的每页的行数（*）
+    queryParamsType: '',               // 传给服务器pageSize ,pageNumber
+    search: false,                      //是否显示表格搜索
+    strictSearch: false,
+    showColumns: false,                  //是否显示所有的列（选择显示的列）
+    showRefresh: false,                  //是否显示刷新按钮
+    clickToSelect: true,                //是否启用点击选中行
+    //height: 500,                      //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+    uniqueId: "no",                     //每一行的唯一标识，一般为主键列
+    showToggle: false,                   //是否显示详细视图和列表视图的切换按钮
+    cardView: false,                    //是否显示详细视图
+    async:true,
+
+
+    columns: [
+        { field: 'data_id', title: '资料ID',
+        formatter: function(value, row, index) {
+            return row.data_id;
+        },},
+        { field: 'col_task_id', title: '采集任务ID',
+        formatter: function(value, row, index) {
+            return row.col_task_id;
+        },},
+        { field: 'qb_id', title: '情报ID',
+        formatter: function(value, row, index) {
+            return row.qb_id;
+        },},
+        { field: 'data_name', title: '资料名称',
+        formatter: function(value, row, index) {
+            return row.data_name;
+        },},
+        { field: 'data_source', title: '资料源',
+        formatter: function(value, row, index) {
+            return row.data_source;
+        },},
+        { field: 'col_type', title: '采集类型',
+        formatter: function(value, row, index) {
+            return row.col_type;
+        },},
+        { field: 'work_use', title: '作业用途',
+        formatter: function(value, row, index) {
+            return row.work_use;
+        },},
+        { field: 'province', title: '省份',
+        formatter: function(value, row, index) {
+            return row.province;
+        },},
+        { field: 'city', title: '城市',
+        formatter: function(value, row, index) {
+            return row.city;
+        },},
+        { field: 'sw_province', title: 'SW省份',
+        formatter: function(value, row, index) {
+            return row.sw_province;
+        },},
+        { field: 'col_time', title: '采集时间',
+        formatter: function(value, row, index) {
+            return row.col_time;
+        },},
+        { field: 'deal_hj', title: '处理环节',
+        formatter: function(value, row, index) {
+            return row.deal_hj;
+        },},
+        { field: 'status', title: '状态',
+        formatter: function(value, row, index) {
+            return row.status;
+        },},
+        { field: 'start_time', title: '开始时间',
+        formatter: function(value, row, index) {
+            return row.start_time;
+        },},
+        { field: 'end_time', title: '结束时间',
+        formatter: function(value, row, index) {
+            return row.end_time;
+        },},
+        { field: 'data_lc', title: '资料里程',
+        formatter: function(value, row, index) {
+            return row.data_lc;
+        },},
+        { field: 'trail_point', title: '轨迹点数',
+        formatter: function(value, row, index) {
+            return row.trail_point;
+        },},
+        ],
+    onLoadSuccess: function() { //加载成功时执行
+        $("#theTable th").css("text-align", "center"); //设置表头内容居中
+    },
+    onLoadError: function() { //加载失败时执行
+        alert("加载数据失败");
+    }
+});
+
+function init_table(){
+    var get_url = "/little_data_all";
+    $.get(get_url, {
+        },
+        function(data) {
+            console.log(data);
+
+            $('#fusion_failure_table').bootstrapTable('load', data);
+        })
+};
+
+$(document).ready(function() {
+    init_table();
+})
+    function tableWidth(){
+    //可以根据自己页面情况进行调整
+    return $(window).width() - 50;
+}
+
+$(window).resize(function() {
+    $('#fusion_failure_table').bootstrapTable('resetView', {
+        width: tableWidth(),
+    });
+})
+
+</script>
+
+<script>
+    function choose_date() {
+        $('.time_flag').val(1);
+        // alert($('.choose_date').val());
+        $('#ui-datepicker-time').css('display','none');
+        $('.ui-datepicker-time').css('display','block');
+
+    }(jQuery)
+
+</script>
+</html>

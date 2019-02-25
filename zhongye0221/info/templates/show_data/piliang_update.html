@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="../../static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/css/bootstrap-table.min.css">
+    <link rel="stylesheet" href="../../static/css/jquery-ui-1.9.2.custom.css" type="text/css">
+
+    <script type="text/javascript" src="../../static/js/jquery-1.12.4.min.js"></script>
+    <script src="../../static/js/Popper.min.js"></script>
+    <script src="../../static/js/bootstrap.min.js"></script>
+    <script src="../../static/js/bootstrap-table.min.js"></script>
+    <script src="../../static/js/bootstrap-table-zh-CN.min.js"></script>
+    <script type="text/javascript" src="../../static/js/jquery-ui-1.9.2.custom.js"></script>
+    <script type="text/javascript" src="../../static/js/share.js"></script>
+
+    <script type="text/javascript" src="../../static/js/files/pilianggengxin.js"></script>
+
+    <title>批量更新</title>
+</head>
+<body>
+<div style="width: 100%; height: 100%;">
+    <h2 style="text-align: center;margin: 10px auto;height: 5%;">批量更新</h2>
+    <!-- 第一行 -->
+    <div style="width: 100%;height:20%;float: left;">
+        <div id="ziliao_id" class="ziliao_id" style="width: 16%;height:100%; float: left;" >
+            <div style=" width: 50%;height: 100%; float: left;">
+                <p style="float: right;">资料ID：</p>
+            </div>
+            <input type="text" name="ziliaoID" class="ziliaoID"  style="width: 50%;height:100%;margin-top: 0;" placeholder="请输入" >
+        </div>
+
+        <div id="" class="text " style="width: 16%;height:100%;float: left;margin: 0;">
+            <div style=" width: 50%;height: 100%; float: left;">
+                <p style="float: right;">资料源：</p>
+            </div>
+            <select id="select" class="piliang_srouce" style="width:50%;height:100%;margin-top: 0;">
+                <option style="color: #aaaaaa;">无</option>
+                <option>自采高精</option>
+                <option>设备众包</option>
+                <option>众包</option>
+            </select>
+        </div>
+
+        <div id="" class="text " style="width: 16%;height:100%;float: left;margin: 0;">
+            <div style=" width: 50%;height: 100%; float: left;">
+                <p style="float: right;"><span>状态：</span></p>
+            </div>
+            <select id="select" class="piliang_status" style="width:50%;height:100%;margin-top: 0px;">
+              <option style="color: #aaaaaa;">无</option>
+              <option>成功</option>
+              <option>失败</option>
+
+            </select>
+        </div>
+
+         <div id="" class="text " style="width: 16%;height:100%;float: left">
+            <div style=" width: 50%;height: 100%; float: left;">
+                <p style="float: right;"><span>SW省份：</span></p>
+            </div>
+            <select id="select" class="piliang_sw" style="width:50%; height:100%;margin-top: 0;">
+              <option style="color: #aaaaaa;">无</option>
+              <option>A</option>
+              <option>B</option>
+              <option>C</option>
+            </select>
+        </div>
+
+        <div id="time" class="text " style="width: 20%;height:100%;float: left;">
+            <div style=" width: 40%;height: 100%; float: left;">
+                <p style="float: right;">入库时间：</p>
+            </div>
+            <button type="button" id="ui-datepicker-time" class="time_flag" value="0" style="width:40%;height:100%;display: block" onclick="choose_date()">选择日期</button>
+
+            <!-- 时间框 -->
+            <input type="text" id="ui-datepicker-time" class="ui-datepicker-time" style="width: 55%;height:28px;font-size: 12px;" readonly value="" />
+
+            <div class="ui-datepicker-css">
+              <div class="ui-datepicker-quick">
+                  <p>快捷日期<a class="ui-close-date">X</a></p>
+
+              </div>
+              <div class="ui-datepicker-choose">
+                  <p>自选日期</p>
+                  <div class="ui-datepicker-date">
+                      <input name="startDate" id="startDate" class="startDate" readonly value="2014/12/20" type="text">
+                    -
+                      <input name="endDate" id="endDate" class="endDate" readonly  value="2014/12/20" type="text" disabled onChange="datePickers()">
+
+                  </div>
+              </div>
+          </div>
+        </div>
+
+    </div>
+    <!-- 第二行 -->
+    <div style="height: 20%;width: 100%;margin-top: 8px;float: left;">
+
+        <div id="" class="text " style="width: 16%;height:100%;float: left;">
+            <div style=" width: 50%;height: 100%; float: left;">
+                <p style="float: right;"><span>省份：</span></p>
+            </div>
+              <select id="pi_province" class="pi_province" style="width:50%;height:100%;" onclick="pi_province()">
+              <option style="color: #aaaaaa;">无</option>
+              {% for pro in data %}
+                  <option>{{ pro.namecn }}</option>
+              {% endfor %}
+            </select>
+        </div>
+
+        <div id="" class="text " style="width: 16%;height:100%;float: left;">
+          <div style=" width: 50%;height: 100%; float: left;">
+              <p style="float: right;"><span>城市：</span></p>
+          </div>
+          <select id="xiao_city" class="piliang_city" style="width:50%;height:100%;">
+              <option id="city2" style="color: #aaaaaa;">无</option>
+          </select>
+        </div>
+
+
+        <!-- 查询  导出 -->
+        <div style="float: right;margin: 0px auto; width: 9%;height: 100%">
+            <button style="width: 50%;font-size:14px;text-decoration: none; height:100%;text-align: center;background: whitesmoke; float:left;" onclick="pi_search()">查询</button>
+            <form action="/download/批量更新.xls" method="get">
+                <input class="daochu" type="submit" value="导出" style="float: left;height: 100%;width: 50%;background: whitesmoke;font-size: 14px;" onclick="pi_download()">
+            </form>
+        </div>
+    </div>
+    <!-- 第三行 -->
+    <div style="padding: 8px 10px;display: block; width: 100%;" id="div_tall">
+        <table id="table_all" class="table table-striped" data-pagination="true" data-show-refresh="true" data-show-toggle="true" data-showColumns="true">
+            <thead>
+                <tr>
+                    <th data-field="col_task_id" data-align="center"><b>资料ID</b></th>
+                    <th data-field="data_name" data-align="center">资料名称</th>
+                    <th data-field="data_source" data-align="center">资料源</th>
+                    <th data-field="province" data-align="center">省份</th>
+                    <th data-field="city" data-align="center">城市</th>
+                    <th data-field="sw_province" data-align="center">sw省份</th>
+                    <th data-field="col_time" data-align="center">采集时间</th>
+                    <th data-field="ruku_time" data-align="center">入库时间</th>
+                    <th data-field="send_time" data-align="center">下发时间</th>
+                    <th data-field="status" data-align="center">状态</th>
+                    <th data-field="col_lc" data-align="center">采集里程</th>
+                    <th data-field="trail_point" data-align="center">轨迹点数</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div style="padding: 8px 10px; display: none; width: 100%" id="div_tresult">
+        <table id="table_result" class="table table-striped" data-pagination="true" data-show-refresh="true" data-show-toggle="true" data-showColumns="true">
+        <thead>
+            <tr>
+                <th data-field="data_id" data-align="center"><b>资料ID</b></th>
+                <th data-field="data_name" data-align="center">资料名称</th>
+                <th data-field="data_source" data-align="center">资料源</th>
+                <th data-field="province" data-align="center">省份</th>
+                <th data-field="city" data-align="center">城市</th>
+                <th data-field="sw_province" data-align="center">sw省份</th>
+                <th data-field="col_time" data-align="center">采集时间</th>
+                <th data-field="ruku_time" data-align="center">入库时间</th>
+                <th data-field="send_time" data-align="center">下发时间</th>
+                <th data-field="status" data-align="center">状态</th>
+                <th data-field="col_lc" data-align="center">采集里程</th>
+                <th data-field="trail_point" data-align="center">轨迹点数</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    </div>
+</div>
+
+</body>
+
+<script>
+    $('#table_all').bootstrapTable({
+    url: '/piliang_all',
+    method:'get',
+    dataType:"json",
+    contentType:'application/x-www-form-urlencoded',
+
+    striped: true,                      //是否显示行间隔色
+    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+    pagination: true,                   //是否显示分页（*）
+    pageSize: 10,
+    pageNumber: 1,
+    sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+    pageList: [10, 15, 20, 50],        //可供选择的每页的行数（*）
+    queryParamsType: '',               // 传给服务器pageSize ,pageNumber
+    search: false,                      //是否显示表格搜索
+    strictSearch: false,
+    showColumns: false,                  //是否显示所有的列（选择显示的列）
+    showRefresh: false,                  //是否显示刷新按钮
+    clickToSelect: true,                //是否启用点击选中行
+    //height: 500,                      //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+    uniqueId: "no",                     //每一行的唯一标识，一般为主键列
+    showToggle: false,                   //是否显示详细视图和列表视图的切换按钮
+    cardView: false,                    //是否显示详细视图
+    async:true,
+
+
+    columns: [
+        { field: 'data_id', title: '资料ID',
+        formatter: function(value, row, index) {
+            return row.data_id;
+        },},
+        { field: 'data_name', title: '资料名称',
+        formatter: function(value, row, index) {
+            return row.data_name;
+        },},
+        { field: 'data_source', title: '资料源',
+        formatter: function(value, row, index) {
+            return row.data_source;
+        },},
+        { field: 'province', title: '省份',
+        formatter: function(value, row, index) {
+            return row.province;
+        },},
+        { field: 'city', title: '城市',
+        formatter: function(value, row, index) {
+            return row.city;
+        },},
+        { field: 'sw_province', title: 'SW省份',
+        formatter: function(value, row, index) {
+            return row.sw_province;
+        },},
+        { field: 'col_time', title: '采集时间',
+        formatter: function(value, row, index) {
+            return row.col_time;
+        },},
+        { field: 'ruku_time', title: '入库时间',
+        formatter: function(value, row, index) {
+            return row.ruku_time;
+        },},
+        { field: 'send_time', title: '下发时间',
+        formatter: function(value, row, index) {
+            return row.send_time;
+        },},
+        { field: 'status', title: '状态',
+        formatter: function(value, row, index) {
+            return row.status;
+        },},
+
+        { field: 'data_lc', title: '资料里程',
+        formatter: function(value, row, index) {
+            return row.data_lc;
+        },},
+        { field: 'trail_point', title: '轨迹点数',
+        formatter: function(value, row, index) {
+            return row.trail_point;
+        },},
+        ],
+    onLoadSuccess: function() { //加载成功时执行
+        $("#theTable th").css("text-align", "center"); //设置表头内容居中
+    },
+    onLoadError: function() { //加载失败时执行
+        alert("加载数据失败");
+    }
+});
+
+    function init_table(){
+        var get_url = "/piliang_all";
+        $.get(get_url, {
+            },
+            function(data) {
+                console.log(data);
+                $('#fusion_failure_table').bootstrapTable('load', data);
+            })
+    };
+
+    $(document).ready(function() {
+        init_table();
+    })
+    function tableWidth(){
+        //可以根据自己页面情况进行调整
+        return $(window).width() - 50;
+    }
+
+    $(window).resize(function() {
+        $('#fusion_failure_table').bootstrapTable('resetView', {
+            width: tableWidth(),
+        });
+    })
+</script>
+
+ <script>
+    function choose_date() {
+        $('.time_flag').val(1);
+        // alert($('.choose_date').val());
+        $('#ui-datepicker-time').css('display','none');
+        $('.ui-datepicker-time').css('display','block');
+
+    }(jQuery)
+
+</script>
+
+
+</html>
+
+
+
+
+
+
+

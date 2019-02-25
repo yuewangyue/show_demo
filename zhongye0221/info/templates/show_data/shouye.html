@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en" style="background: whitesmoke;">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <link rel="stylesheet" href="../../static/css/jquery-ui-1.9.2.custom.css" type="text/css">
+
+    <script type="text/javascript" src="../../static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../../static/js/jquery-1.8.3.js"></script>
+    <script type="text/javascript" src="../../static/js/jquery-ui-1.9.2.custom.js"></script>
+    <script type="text/javascript" src="../../static/js/share.js"></script>
+
+    <script src="../../static/js/jquery-1.12.4.min.js"></script>
+    <script src="../../static/js/echarts.min.js"></script>
+    <script src="../../static/js/china.js"></script>
+
+    <script>
+    $(function () {
+
+        var frame_w = $('#shouye_main_body').outerWidth();
+        var frame_h = $('#shouye_main_body').outerHeight();
+        $('#shouye_main_frame').css({'width': frame_w, 'height': frame_h});
+
+    });
+
+    </script>
+
+    <style>
+
+        .main {
+            position:fixed;
+            width: 100%;
+            height: 100%;
+            zoom: 1;
+            margin: 0;
+            background: whitesmoke;
+        }
+        .tab{
+            width:100%;
+            height:100%;
+            margin:0 auto ;
+            }
+        .tab_btns{
+            margin: 5px auto auto 30px;
+            height:50px;
+            }
+        .tab_btns a{
+            width:100px;
+            height:38px;
+            font-size: 20px;
+            border-bottom:0;
+            outline:none;
+        }
+        .tab_btns .active{
+            color: #438eb9;
+            border: 1px solid #17a2b8;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div class="main">
+    <!-- 左部分-->
+    <div style="width: 25%; height: 100%; float: left;">
+        <!-- 接收实采量-->
+        <div class="left_div1" style="width: 100%; height: 24%; float: left;background: #deecf9;">
+            <div style="width: 100%; height: 16%;">
+                <p style="font-size: 20px;height: 40%;color: #8f949a; margin: 10px auto 0 20px">接收实采量(里程)</p>
+            </div>
+            <div style="width: 100%;height: 20%">
+                <div style="height: 100%;width:30%;float: left;">
+                    <p style=" margin: 3px 0 0 0 ;font-size: 30px;float: right;">{{ data['n1'] }}</p>
+                </div>
+                <div style="height: 100%;width:70%;float: right;">
+                    <p style="font-size: 15px; float: left;color:dimgrey">,其中有效里程{{ 2222 }}</p>
+                </div>
+            </div>
+            <div style="width:100%; height: 34%;">
+                </br>
+                {#周同比#}
+                <div style="width: 50%;height: 100%;float: left;">
+                    <p style="margin:  0 0 0 20px;float: left; font-size: 18px;color: #8f949a;">周同比</p>
+                    <img src="../../static/images/u50.png" style="float: left;margin-top: 2px;">
+                    <p style="float:left; margin: 5px 5px;font-size: 18px;">{{ data['week_diff'] }}</p>
+                </div>
+                {#日环比#}
+                <div style="width: 50%;height: 100%;float: left;">
+                    <p style="float: left; margin: 0 0 0 10px;font-size: 18px;color: #8f949a;">日环比</p>
+                    <img src="../../static/images/u54.png" style="float: left;margin-top: -4px;">
+                    <p style="float: left;margin: 5px 5px;font-size: 18px;">{{ data['day_diff'] }}</p>
+                </div>
+            </div>
+            <div style="width: 100%; height: 20%;">
+                <p style=" width: 100%; margin: 0 auto auto 20px; border: 1px solid whitesmoke"></p>
+                <p style="font-size:17px; color:dimgrey; margin: -11px 26px; float: left">当天接收实采量{{ 3400 }},其中有效里程{{ 3400 }}</p>
+            </div>
+        </div>
+
+        <!-- 过滤资料量-->
+        <div class="left_div4" style="width: 100%;height: 15%;margin-top: 10px;float: left;background: #fff8f7;">
+                <p style="height: 34%;width: 90%;font-size: 20px; color: #8f949a; margin: 10px auto 0 22px">过滤资料量</p>
+                <p style="font-size: 30px; height: 20%;width: 17%;margin: 0 0 auto 53px;float: left;">{{ data['check_length'] }}</p>
+                <p style="font-size: 15px;height: 15%;width: 8%;margin: 7px 5px auto 8px;color:dimgrey;float: left;">公里</p>
+                <p style="font-size: 30px;height: 20%;width: 23%;margin: 0 auto auto 8px;float: left;">| {{ 6666 }}</p>
+                <p style="font-size: 15px;margin: 7px auto auto 7px;width: 6%;height: 15%;color:dimgrey;float: left;">张</p>
+
+        </div>
+
+        <!-- 环形图-->
+        <div id="down_left" style="width: 100%; height: 55%;background: #e9ecef;float: left;margin-top: 15px">
+
+            <h style="font-size: 20px;float: left;width: 80%;height: 10%;margin: 9px auto 0px 20px;">资料量分布</h>
+            <p style="width: 100%; margin: 0px auto 0 10px; border: 1px solid whitesmoke;float: left;"></p>
+
+            <div id="tab" class="tab" style="float: left;height: 11%;">
+                <!--选项卡  头-->
+                <div class="tab_btns" style="height: 90%;">
+                    <a class="active" style="text-decoration: none;font-size: 17px;color: black;height: 90%;" >实采资料</a>
+                    <a style="text-decoration: none;font-size: 17px;color: black;height: 90%;" >大数据资料</a>
+                    <a style="text-decoration: none;font-size: 17px;color: black;height: 90%;" >数据资料</a>
+                </div>
+            </div>
+            <!--饼图-->
+            <div style="width: 100%;height: 70%;margin: 0px auto auto auto;">
+                <div id="pie" class="" style="width: 100%; height: 100%;float: left;left: -35px;" value="{{ pie_data }}"></div>
+            </div>
+
+        </div>
+    </div>
+    <!-- 右部分-->
+    <div style="width: 70%; height: 100%; float: right;">
+
+        <div id="down_right" style="width: 100%; height: 100%;float: left; margin-top: 0px;">
+
+            <div style="width: 100%; height: 5%">
+                <p style="float: left;margin:0 auto auto 400px;">选择： </p>
+                <select id="select"  class="choose_prj" style="width:150px;height:24px;margin-top: 0;float: left;">
+                    <option>设备众包</option>
+                    <option>B</option>
+                    <option>墨汁</option>
+                </select>
+                <button type="button" style="float: left;margin-left: 5px;height:24px;" onclick="get_data()">go</button>
+            </div></br>
+            <div id="chinamap" style="width: 100%; height: 95%;float: right;margin-right: 10px;" value="{{ map_data }}"></div>
+
+        </div>
+    </div>
+
+
+</div>
+</body>
+
+{#地图 1#}
+<script type="text/javascript">
+
+var map_data = document.getElementById('chinamap').getAttribute("value");
+// alert(map_data);
+var json_map = JSON.parse(map_data)['data'];
+
+var optionMap = {
+    backgroundColor: '',
+    title: {
+        text: '',
+        subtext: '',
+        x: 'center'
+    },
+    tooltip: {
+        trigger: 'item',
+        show: true,
+
+        formatter: function (params) {
+            var res = params.name+'<br/>';
+            var myseries = option.series;
+            var mydata1 = json_map;
+
+            for(i=0;i<mydata1.length;i++){
+                if(mydata1[i]['name']==params.name){
+
+                    res = mydata1[i]['name']+ ":"+ mydata1[i]['value'];
+                }
+            }
+            return res;
+        },
+    },
+
+
+    //左侧小导航图标
+    visualMap: {
+        show: true,
+        min : {{ min_value }},
+        max : {{ max_value }},
+        text : ['High','Low'],
+        realtime : false,
+        calculable : true,
+        inRange : {
+            color : ['lightskyblue','yellow','orangered']
+        },
+        x: 'right',
+        top: '400',
+
+    },
+
+    //配置属性
+    series: [{
+        name: '数据1',
+        type: 'map',
+        mapType: 'china',
+        zoom: 1.0,
+        roam: true,
+        top: '0',
+        label: {
+            normal: {
+                show: true  //省份名称
+            },
+            emphasis: {
+                show: true
+
+            }
+        },
+        data: json_map //数据
+    }
+    ]
+};
+//初始化echarts实例
+var myChart = echarts.init(document.getElementById('chinamap'));
+
+//使用制定的配置项和数据显示图表
+myChart.setOption(optionMap);
+
+</script>
+{#地图 2#}
+<script type="text/javascript">
+    function get_data() {
+        var choose_prj = $('.choose_prj').val();
+{#        alert(choose_prj);#}
+         var params ={
+             "choose_prj":choose_prj
+         };
+
+         $.ajax({
+            type: "post",
+            url: '/shouye',
+            data: JSON.stringify(params),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (data) {
+                var val = data;
+                var json_map = val['data'];
+                var min_value = val['min_value'];
+                var max_value = val['max_value'];
+{#                alert(json_val);#}
+                var optionMap = {
+                    backgroundColor: '',
+                    title: {
+                        text: '',
+                        subtext: '',
+                        x: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        show: true,
+
+                        formatter: function (params) {
+                            var res = params.name+'<br/>';
+                            var myseries = option.series;
+                            var mydata1 = json_map;
+
+                            // alert(mydata1.length);
+                            for(i=0;i<mydata1.length;i++){
+
+                                if(mydata1[i]['name']==params.name){
+
+                                        res = mydata1[i]['name']+ ":" + mydata1[i]['value'];
+                                }
+                                else {
+                                    // 省份名字对不上
+                                }
+                            }
+                            return res;
+                        },
+                    },
+
+                    //左侧小导航图标
+                    visualMap: {
+                        show: true,
+                        min : min_value,
+                        max : max_value,
+                        text : ['High','Low'],
+                        realtime : false,
+                        calculable : true,
+                        inRange : {
+                            color : ['lightskyblue','yellow','orangered']
+                        },
+                        x: 'right',
+                        top: '500',
+{#                        splitList: [#}
+{#                            {start: 400, end: 500},#}
+{#                            {start: 300, end: 400}, {start: 200, end: 300},#}
+{#                            {start: 100, end: 200}, {start: 0, end: 100}#}
+{#                        ],#}
+{#                        color: ['#5475f5', '#85daef', '#5cadad', '#1afd9c', '#9fb5ea']#}
+
+                    },
+
+                    //配置属性
+                    series: [{
+                        name: '数据1',
+                        type: 'map',
+                        mapType: 'china',
+                        roam: true,
+                        top: '0',
+                        label: {
+                            normal: {
+                                show: true  //省份名称
+                            },
+                            emphasis: {
+                                show: true
+
+                            }
+                        },
+                        data: json_map //数据
+                    }
+                    ]
+                };
+                //初始化echarts实例
+                var myChart = echarts.init(document.getElementById('chinamap'));
+
+                //使用制定的配置项和数据显示图表
+                myChart.setOption(optionMap);
+
+
+            }, error: function () {
+
+            }
+        })
+
+    }
+
+
+
+
+</script>
+{#环形图１#}
+<script type="text/javascript">
+
+    var pie_data = document.getElementById('pie').getAttribute("value");
+    var json_val = JSON.parse(pie_data)['data'];
+    var name_list = JSON.parse(pie_data)['name'];
+
+    var option = {
+    title: {
+            text: '',
+            left: 'center',
+            top: 10
+        },
+    tooltip: {
+        trigger: 'item',
+        formatter: "{a} <br/>{b}: {c} ({d}%)"
+    },
+    legend: {
+            orient: 'vertical',
+            x: 'right',
+            top: 100,
+            right: 30,
+            fontSize: 20,
+            data:name_list
+        },
+    series: [
+        {
+            name:'实采资料(公里)',
+            type:'pie',
+            colorAlpha: 'blurSize',
+            radius: ['40%', '60%'],
+            avoidLabelOverlap: false,
+            label: {
+                normal: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    show: true,
+                    formatter: "{b}:{d}%",
+                    textStyle: {
+                        fontSize: '18',
+                        fontWeight: 'bold'
+
+                    }
+                }
+            },
+            labelLine: {
+                normal: {
+                    show: false
+                }
+            },
+            data:[
+                {value: json_val[0]['value'], name:json_val[0]['name']},
+                {value: json_val[1]['value'], name:json_val[1]['name']},
+                {value: json_val[2]['value'], name:json_val[2]['name']},
+                {value: json_val[3]['value'], name:json_val[3]['name']},
+                {value: json_val[4]['value'], name:json_val[4]['name']}
+            ]
+        }
+        ]
+        };
+
+    var myChart = echarts.init(document.getElementById('pie'));
+    myChart.setOption(option);
+
+
+</script>
+
+<script type="text/javascript">
+    var $btn = $('.tab_btns a');
+
+    $btn.click(function(){
+        $(this).addClass('active').siblings().removeClass('active');
+        var pie_name = $(this).html();
+        // alert(pie_name);
+        params = {"pie_name":pie_name};
+         $.ajax({
+            type: "post",
+            url: '/get_pie_data',
+            data: JSON.stringify(params),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (data) {
+                var val =data;
+                var json_val2 = val['data'];
+                var part_name = val['name'];
+                var option = {
+                    title: {
+                            text: '',
+                            left: 'center',
+                            top: 10
+                        },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b}: {c} ({d}%)"
+                    },
+                    legend: {
+                            orient: 'vertical',
+                            x: 'right',
+                            top: 100,
+                            right: 30,
+                            fontSize: 20,
+                            data:part_name
+                        },
+                    series: [
+                        {
+                            name:'实采资料(公里)',
+                            type:'pie',
+                            colorAlpha: 'blurSize',
+                            radius: ['40%', '60%'],
+                            avoidLabelOverlap: false,
+                            label: {
+                                normal: {
+                                    show: false,
+                                    position: 'center'
+                                },
+                                emphasis: {
+                                    show: true,
+                                    formatter: "{b}:{d}%",
+                                    textStyle: {
+                                        fontSize: '18',
+                                        fontWeight: 'bold'
+                                    }
+                                }
+                            },
+
+                            labelLine: {
+                                normal: {
+                                    show: false
+                                }
+                            },
+                            data:get_val()
+
+                        }
+                        ]
+                    };
+                function get_val() {
+                    var json_len = json_val2.length;
+                    // alert(json_len);
+                    if (json_len == 2){
+                        var res = [
+                                    {value: json_val2[0]['value'], name:json_val2[0]['name']},
+                                    {value: json_val2[1]['value'], name:json_val2[1]['name']}
+                                    ];
+
+                    }
+                    else if (json_len == 5) {
+                        var res = [
+                                    {value: json_val2[0]['value'], name:json_val2[0]['name']},
+                                    {value: json_val2[1]['value'], name:json_val2[1]['name']},
+                                    {value: json_val2[2]['value'], name:json_val2[2]['name']},
+                                    {value: json_val2[3]['value'], name:json_val2[3]['name']},
+                                    {value: json_val2[4]['value'], name:json_val2[4]['name']}
+                                ];
+
+                    }
+                    else if (json_len == 1) {
+                        var res = [
+                                {value: json_val2[0]['value'], name:json_val2[0]['name']}
+                                ];
+
+                    }
+                    return res;
+                }
+
+                var myChart = echarts.init(document.getElementById('pie'));
+                myChart.setOption(option);
+
+            },
+             error: {
+
+             }
+         })
+
+        })
+
+
+
+</script>
+
+</html>
+
+
+
+
+
+
+
+
